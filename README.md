@@ -19,10 +19,3 @@ Este repositório é responsável por entregar minha solução para o problema d
 ### Frameworks 
 
 - **`angular.js`** 
-
-# Afazeres imediatos:
-
-- [ ] estruturar ambiente
-- [ ] estruturar schema do banco de dados
-- [ ] criar CRUD básico para as tabelas
-- [ ] 
