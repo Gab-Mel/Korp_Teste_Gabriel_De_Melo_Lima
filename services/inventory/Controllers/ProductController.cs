@@ -23,6 +23,20 @@ public class ProductController : ControllerBase
         return await _context.Products.ToListAsync();
     }
 
+    // GET: api/product/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Product>> Get(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return product;
+    }
+
     // POST: api/product
     [HttpPost]
     public async Task<ActionResult<Product>> Create(Product product)
@@ -31,5 +45,54 @@ public class ProductController : ControllerBase
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+    }
+
+    // PUT: api/product/1
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, Product updated)
+    {
+        if (id != updated.Id)
+            return BadRequest("ID mismatch");
+
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+            return NotFound();
+
+        if (updated.Quantity < 0)
+            return BadRequest("Quantity cannot be negative");
+
+        if (string.IsNullOrWhiteSpace(product.Description))
+            return BadRequest("Description is required");
+
+        // atualização controlada
+        product.Code = updated.Code;
+        product.Description = updated.Description;
+        product.Quantity = updated.Quantity;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    // DELETE: api/product/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool ProductExists(int id)
+    {
+        return _context.Products.Any(p => p.Id == id);
     }
 }
