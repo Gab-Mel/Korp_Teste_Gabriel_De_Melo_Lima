@@ -1,0 +1,39 @@
+<div class="modal-overlay">
+  <div class="modal">
+    <button class="close-btn" (click)="cancel()">×</button>
+
+    <h2>Nota #{{ invoice?.number }}</h2>
+    <p>Status: {{ invoice?.status }}</p>
+    <p>Cliente: {{ invoice?.custumerName }}</p>
+
+    <ul>
+      <li *ngFor="let item of invoice?.items; let i = index">
+        Produto {{ item.productId }} -
+        Qtd:
+        <input
+          *ngIf="invoice?.status === 'OPEN'"
+          type="number"
+          [value]="item.quantity"
+          (change)="updateItemQuantity(i, $any($event.target).valueAsNumber)"
+        />
+        <span *ngIf="invoice?.status !== 'OPEN'">{{ item.quantity }}</span>
+      </li>
+    </ul>
+
+    <div *ngIf="invoice.status === 'OPEN'">
+      <select [(ngModel)]="selectedProductId">
+        <option [value]="0">Selecione</option>
+        <option *ngFor="let p of products()" [value]="p.id">{{ p.description }}</option>
+      </select>
+
+      <input type="number" [(ngModel)]="quantity" />
+      <button (click)="addItem()">Adicionar Item</button>
+    </div>
+
+    <hr />
+
+    <button *ngIf="invoice.status === 'OPEN'" (click)="save()">Salvar Alterações</button>
+    <button *ngIf="invoice.status === 'OPEN'" (click)="print()">Fechar / Imprimir</button>
+    <button *ngIf="invoice.status === 'OPEN'" (click)="delete()">Excluir Nota</button>
+  </div>
+</div>

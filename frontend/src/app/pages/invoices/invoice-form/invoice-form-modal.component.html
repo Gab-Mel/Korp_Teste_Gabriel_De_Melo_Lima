@@ -1,0 +1,37 @@
+<div class="modal-overlay">
+  <div class="modal">
+    <button class="close-btn" (click)="cancel()">×</button>
+
+    <h2>Nova Nota</h2>
+
+    <label>Cliente</label>
+    <input [(ngModel)]="custumerName" />
+
+    <!-- <label>Produto</label> -->
+    <div *ngIf="products().length === 0">Carregando produtos...</div>
+
+    <select *ngIf="products().length > 0" [(ngModel)]="selectedProductId">
+      <option [value]="0">Selecione</option>
+      <option *ngFor="let p of products()" [value]="p.id">{{ p.description }}</option>
+    </select>
+
+    <!-- <label>Quantidade</label> -->
+    <input type="number" [(ngModel)]="quantity" />
+
+    <button (click)="addItem()">Adicionar</button>
+
+    <hr />
+
+    <ul>
+      <li *ngFor="let i of items()">
+        Produto {{ i.productId }} - Qtd:
+        <input type="number" [value]="i.quantity" (change)="updateItemQuantity(items().indexOf(i),
+        $any($event.target).valueAsNumber)" />
+      </li>
+    </ul>
+
+    <button (click)="save()">Salvar Nota</button>
+    <button (click)="saveAndPrint()">Salvar e Imprimir</button>
+    <button (click)="cancel()">Cancelar</button>
+  </div>
+</div>

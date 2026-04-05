@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using inventory.Data;
+using billing.Data;
 
 #nullable disable
 
-namespace inventory.Migrations
+namespace billing.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401070720_InitialCreate")]
+    [Migration("20260405131515_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace inventory.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("inventory.Entities.Invoice", b =>
+            modelBuilder.Entity("billing.Entities.Invoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,6 +36,14 @@ namespace inventory.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CustumerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
@@ -45,13 +53,16 @@ namespace inventory.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdempotencyKey")
+                        .IsUnique();
+
                     b.HasIndex("Number")
                         .IsUnique();
 
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("inventory.Entities.InvoiceItem", b =>
+            modelBuilder.Entity("billing.Entities.InvoiceItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,63 +81,24 @@ namespace inventory.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
                     b.HasIndex("InvoiceId", "ProductId")
                         .IsUnique();
 
                     b.ToTable("InvoiceItems");
                 });
 
-            modelBuilder.Entity("inventory.Entities.Product", b =>
+            modelBuilder.Entity("billing.Entities.InvoiceItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("Products", t =>
-                        {
-                            t.HasCheckConstraint("CK_Product_Quantity", "\"Quantity\" >= 0");
-                        });
-                });
-
-            modelBuilder.Entity("inventory.Entities.InvoiceItem", b =>
-                {
-                    b.HasOne("inventory.Entities.Invoice", "Invoice")
+                    b.HasOne("billing.Entities.Invoice", "Invoice")
                         .WithMany("Items")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("inventory.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Invoice");
-
-                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("inventory.Entities.Invoice", b =>
+            modelBuilder.Entity("billing.Entities.Invoice", b =>
                 {
                     b.Navigation("Items");
                 });

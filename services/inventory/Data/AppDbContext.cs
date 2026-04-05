@@ -27,6 +27,12 @@ public class AppDbContext : DbContext
 
         entity.HasIndex(p => p.Code)
               .IsUnique();
+        
+        entity.Property(p => p.Price)
+              .IsRequired();
+
+        entity.Property(p => p.Unit)
+              .IsRequired();
     });
 
 }

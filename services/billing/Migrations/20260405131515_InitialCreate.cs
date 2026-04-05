@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace inventory.Migrations
+namespace billing.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -19,28 +19,14 @@ namespace inventory.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Number = table.Column<int>(type: "integer", nullable: false),
+                    CustumerName = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IdempotencyKey = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.CheckConstraint("CK_Product_Quantity", "\"Quantity\" >= 0");
                 });
 
             migrationBuilder.CreateTable(
@@ -62,12 +48,6 @@ namespace inventory.Migrations
                         principalTable: "Invoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InvoiceItems_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -77,20 +57,15 @@ namespace inventory.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceItems_ProductId",
-                table: "InvoiceItems",
-                column: "ProductId");
+                name: "IX_Invoices_IdempotencyKey",
+                table: "Invoices",
+                column: "IdempotencyKey",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_Number",
                 table: "Invoices",
                 column: "Number",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_Code",
-                table: "Products",
-                column: "Code",
                 unique: true);
         }
 
@@ -102,9 +77,6 @@ namespace inventory.Migrations
 
             migrationBuilder.DropTable(
                 name: "Invoices");
-
-            migrationBuilder.DropTable(
-                name: "Products");
         }
     }
 }

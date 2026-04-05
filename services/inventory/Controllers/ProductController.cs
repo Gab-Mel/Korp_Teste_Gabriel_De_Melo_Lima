@@ -65,10 +65,22 @@ public class ProductController : ControllerBase
         if (string.IsNullOrWhiteSpace(product.Description))
             return BadRequest("Description is required");
 
-        // atualização controlada
-        product.Code = updated.Code;
-        product.Description = updated.Description;
-        product.Quantity = updated.Quantity;
+        if (updated.Price < 0)
+            return BadRequest("Price cannot be negative");
+
+        if (string.IsNullOrWhiteSpace(updated.Description))
+            return BadRequest("Description is required");
+
+        if (string.IsNullOrWhiteSpace(updated.Unit))
+            return BadRequest("Unit is required");
+
+
+        // // atualização controlada
+        // product.Code = updated.Code;
+        // product.Description = updated.Description;
+        // product.Quantity = updated.Quantity;
+        // product.Price = updated.Price;
+        // product.Unit = updated.Unit;
 
         await _context.SaveChangesAsync();
 

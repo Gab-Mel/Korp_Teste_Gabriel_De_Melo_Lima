@@ -1,1 +1,151 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================
+   app.scss - Base Genérica
+   ========================== */
+
+/* --- Reset e tipografia básica --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* --- Links e botões --- */
+a {
+  text-decoration: none;
+  color: #007bff;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: background 0.2s;
+  &:hover {
+    background-color: #0056b3;
+  }
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+/* --- Inputs e selects --- */
+input, select, textarea {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+  }
+}
+
+/* --- Tabelas genéricas --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  th, td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+}
+
+/* --- Layout de formulários --- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+  label {
+    font-weight: 600;
+  }
+}
+
+/* --- Modal básico --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+/* Botão fechar modal */
+.modal .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    color: #007bff;
+  }
+}
+
+/* --- Containers e cards genéricos --- */
+.container {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* --- Helpers --- */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.hidden { display: none; }

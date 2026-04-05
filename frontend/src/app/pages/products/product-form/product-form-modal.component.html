@@ -1,0 +1,29 @@
+<div class="modal-overlay">
+  <div class="modal">
+    <h2>Novo Produto</h2>
+
+    <label>Código</label>
+    <input [(ngModel)]="product.code" />
+
+    <label>Descrição</label>
+    <input [(ngModel)]="product.description" />
+
+    <label>Quantidade</label>
+    <input type="number" [(ngModel)]="product.quantity" />
+
+    <label>Preço</label>
+    <input type="number" [(ngModel)]="product.price" />
+
+    <label>Unidade</label>
+    <select [(ngModel)]="product.unit">
+      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+    </select>
+
+
+    <br /><br />
+
+    <button (click)="save()">Salvar</button>
+    <button (click)="cancel()">Cancelar</button>
+  </div>
+</div>
+

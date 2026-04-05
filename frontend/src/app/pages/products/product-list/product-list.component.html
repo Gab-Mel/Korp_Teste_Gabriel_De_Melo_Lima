@@ -1,0 +1,39 @@
+<h2>Produtos</h2>
+
+<button (click)="openModal()">Novo Produto</button>
+
+<div *ngIf="loading()">Carregando...</div>
+
+<table *ngIf="!loading()" border="1">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Descrição</th>
+      <th>Quantidade</th>
+      <th>Preço</th>
+      <th>Unidade</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let p of products(); trackBy: trackById">
+      <td>{{ p.code }}</td>
+      <td>{{ p.description }}</td>
+      <td>{{ p.quantity }}</td>
+      <td>{{ p.price }}</td>
+      <td>{{ p.unit }}</td>
+      <td>
+        <button (click)="addStock(p)">+</button>
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+
+<!-- Modal -->
+<app-product-form-modal
+  *ngIf="showModal()"
+  (close)="closeModal()"
+  (created)="onProductCreated($event)"
+></app-product-form-modal>
