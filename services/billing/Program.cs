@@ -1,16 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+using billing.Data;
+using billing.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
+builder.Services.AddHttpClient<InventoryService>(client =>
+{
+    client.BaseAddress = new Uri("http://inventory:8080");
+});
 
 // Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -40,6 +67,28 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    var maxRetries = 10;
+    var delay = TimeSpan.FromSeconds(3);
+
+    for (int i = 0; i < maxRetries; i++)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break; // sucesso
+        }
+        catch (Exception)
+        {
+            Console.WriteLine($"Migration failed, retrying in {delay.TotalSeconds}s... ({i+1}/{maxRetries})");
+            Thread.Sleep(delay);
+        }
+    }
+}
 
 
 app.MapControllers();

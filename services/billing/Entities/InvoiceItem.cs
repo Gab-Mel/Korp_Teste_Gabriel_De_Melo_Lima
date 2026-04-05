@@ -7,4 +7,5 @@ public class InvoiceItem
     public Invoice Invoice { get; set; } = null!;
     public int ProductId { get; set; } // Reference to Product in Inventory service
     public int Quantity { get; set; }
+
 }

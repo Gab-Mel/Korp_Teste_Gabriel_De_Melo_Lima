@@ -18,10 +18,19 @@ public class AppDbContext : DbContext
     {
         entity.HasKey(i => i.Id);
 
+        entity.Property(i => i.Id)
+              .ValueGeneratedOnAdd();
+
+        entity.Property(i => i.CustumerName)
+              .IsRequired();
+
         entity.Property(i => i.Status)
               .IsRequired();
 
         entity.HasIndex(i => i.Number)
+              .IsUnique();
+              
+        entity.HasIndex(i => i.IdempotencyKey)
               .IsUnique();
     });
 
@@ -29,6 +38,8 @@ public class AppDbContext : DbContext
     modelBuilder.Entity<InvoiceItem>(entity =>
     {
         entity.HasKey(ii => ii.Id);
+        entity.Property(ii => ii.Id)
+              .ValueGeneratedOnAdd();
 
         entity.Property(ii => ii.Quantity)
               .IsRequired();

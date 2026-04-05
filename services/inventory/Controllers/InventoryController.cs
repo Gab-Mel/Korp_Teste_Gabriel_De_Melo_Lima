@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using inventory.Data;
 using Microsoft.EntityFrameworkCore;
+using inventory.Entities;
+
 
 namespace inventory.Controllers;
 
@@ -16,22 +18,54 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("decrease")]
-    public async Task<IActionResult> Decrease([FromBody] DecreaseRequest request)
+    public async Task<IActionResult> CreateInvoice([FromBody] List<DecreaseRequest> requests)
+{
+    using var transaction = await _context.Database.BeginTransactionAsync();
+
+    try
     {
-        var affected = await _context.Database.ExecuteSqlRawAsync(
-            @"UPDATE ""Products""
-              SET ""Quantity"" = ""Quantity"" - {0}
-              WHERE ""Id"" = {1} AND ""Quantity"" >= {0}",
-            request.Quantity,
-            request.ProductId
-        );
+        // 1. Agrupa produtos repetidos somando as quantidades
+        var grouped = requests
+            .GroupBy(r => r.ProductId)
+            .Select(g => new { ProductId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) })
+            .ToList();
 
-        if (affected == 0)
-            return BadRequest("Insufficient stock");
+        // 2. Decrementa estoque de todos os produtos
+        foreach (var item in grouped)
+        {
+            var affected = await _context.Database.ExecuteSqlRawAsync(
+                @"UPDATE ""Products""
+                  SET ""Quantity"" = ""Quantity"" - {0}
+                  WHERE ""Id"" = {1} AND ""Quantity"" >= {0}",
+                item.TotalQuantity,
+                item.ProductId
+            );
 
-        return Ok();
+            if (affected == 0)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Insufficient stock for product {item.ProductId}");
+            }
+        }
+
+        await transaction.CommitAsync();
+
+        // 3. Cria a nota com todos os itens da lista
+
+        return Ok(new
+        {
+            Message = "Stock decreased successfully for all products."
+        });
+    }
+    catch
+    {
+        await transaction.RollbackAsync();
+        return BadRequest("Não foi possível criar a nota devido a estoque insuficiente.");
     }
 }
+}
+
+
 
 public class DecreaseRequest
 {
