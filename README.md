@@ -9,6 +9,7 @@ Este repositório é responsável por entregar minha solução para o problema d
 * [Ferramentas usadas](#ferramentas-usadas)
     - [Frameworks](#frameworks)
     - [Bibliotecas](#Bibliotecas)
+* [Detalhamento Técnico](#comentários-sobre-a-implementação-do-projeto)
 
 # Escopo do problema
 
@@ -159,3 +160,48 @@ Os erros foram tratados retornando os devidos codigos e acontecidos para o termi
 
 
 - dotnet-ef
+
+# Comentários sobre a Implementação do Projeto
+
+### Ciclos de vida do Angular utilizados
+- Foram utilizados principalmente **`ngOnInit`** para inicialização de dados em componentes como listas de produtos e invoices.
+- Possivelmente **`ngOnChanges`** foi usado para reagir a mudanças em `@Input()` nos componentes de detalhes.
+- **`ngOnDestroy`** poderia ser usado para limpar subscriptions de observables, evitando memory leaks.
+
+### Uso da biblioteca RxJS
+- Sim, foi feito uso do **RxJS**:
+  - Nos serviços Angular (`ProductService`, `InvoiceService`) com métodos como `http.get()` que retornam **Observables**.
+  - Uso de `.subscribe()` para consumir dados do backend de forma reativa.
+  - Possível uso de operadores como `map`, `filter` ou `tap` para manipulação de fluxos de dados (dependendo do serviço).
+
+### Outras bibliotecas utilizadas
+- **Humanizer** no C#: para formatação amigável de datas ou números.
+- **Entity Framework Core** no C#: para ORM e acesso a bancos de dados relacionais.
+- **Microsoft.AspNetCore.Mvc**: para construção de APIs REST.
+
+### Componentes visuais e bibliotecas
+- Angular padrão com **Angular Router** para navegação (`routerLink`).
+- CSS/SCSS customizado para navegação, botões e layout.
+- Não há menção de frameworks visuais externos como Material ou Bootstrap, mas poderiam ser facilmente integrados.
+
+### Gerenciamento de dependências no Golang
+- Não aplicável, pois o backend é em **C#/.NET**.
+
+### Frameworks utilizados no Golang ou C#
+- **C#/.NET 8**:
+  - **ASP.NET Core** para criação de APIs REST.
+  - **Entity Framework Core** para acesso ao banco de dados e mapeamento ORM.
+
+### Tratamento de erros e exceções no backend
+- No **C#**, foram utilizados:
+  - Retornos **`BadRequest()`** para validação de entradas inválidas.
+  - Retornos **`NotFound()`** quando um recurso não existe.
+  - Estrutura de `try/catch` poderia ser usada para capturar exceções inesperadas, embora o código apresentado use validação antes de salvar no banco.
+
+### Uso de LINQ em C#
+- Sim, LINQ foi utilizado para:
+  - Verificar existência de registros:  
+    ```csharp
+    _context.Products.Any(p => p.Id == id);
+    ```
+  - Possível uso em consultas para filtragem ou projeção de dados no banco com **Entity Framework**.
