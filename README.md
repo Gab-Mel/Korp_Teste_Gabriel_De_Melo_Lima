@@ -1,6 +1,8 @@
 # Korp_Teste_Gabriel_De_Melo_Lima
 Este repositório é responsável por entregar minha solução para o problema descrito no desafio: `Projeto técnico: Sistema de emissão de Notas Fiscais`
 
+[video de apresentação](https://youtu.be/fqCtEtv21tU)
+
 # Indices:
 * [Escopo do problema](#escopo-do-problema)
 * [Solução do problema](#solução-do-problema) 
@@ -80,15 +82,68 @@ O candidato poderá, a seu critério, implementar também:
 
 # Solução do problema
 
+Para atender as requisições optei por docker que é fácil testar falhas sistemicas sem a preocupação de criar uma corrupção de banco. 
+
+Existencia de 3 entidades: Produtos, Notas e uma relacional que foi muito chamada de InvoiceItem por mim.
+
+Cada um dos dois serviços são indeoendentes se não pelo banco a quem eles dependem. no meu caso postegres. 
+
+Apliquei controle de concorrencia validadando ativamente estoque e retrocedendo ações que deixariam o estoque negativo.
+
+Apliquei controle de idempotencia em Notas fiscais usando uma coluna de chaves unicas auto-geradas. Não foi preciso tratar produtos por necessitar de codigo único :/)
+
+A regra do banco foi fortemente cuidada nos diretorios Data de cada microcerviços e as rodas no diretorio Controlers.
+
+Apesar de ter dois serviços semi-distintos juntei ambas as rotas em gat way para facilitar minha comunicação com o front-end.
+
+da parte visual:
+
+instanciei duas paginas:
+<img src="img/pages.png">
+
+a pagina produtos lista os produtos e tem botões para adiçao de mercadoria já cadastradas.
+
+<img src="img/produtos.png">
+
+ela também tem um botão que abre um modal para cadastro de produtos.
+
+<img src="img/newProduto.png">
+
+E a pagina de notas que permite:
+<img src="img/natas.png">
+
+criar notas.
+
+<img src="img/novaNota.png">
+
+cada uma dessas notas tem uma opção de visualização.
+
+se ela está aberta pode ser editada
+
+<img src="img/edit.png">
+
+e visualizar notas fechadas \\\\(•-•)//
+
+<img src="img/close.png">
+
+Os erros foram tratados retornando os devidos codigos e acontecidos para o terminal ou para notificações da tela :\)
+
+
+
+
+
+
+
 # Ferramentas usadas
-
-
-## Frameworks 
 
 * **`angular.js`** 
     - Sass (SCSS)
     - GitHub Copilot
+    - angular/cors para reatividade
 * **`node.js`**
+
+* Docker-modules
+
 
 ## Bibliotecas
 
