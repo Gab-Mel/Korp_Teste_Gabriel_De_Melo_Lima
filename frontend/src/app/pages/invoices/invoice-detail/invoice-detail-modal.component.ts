@@ -18,6 +18,7 @@ export class InvoiceDetailModalComponent {
   @Output() updated = new EventEmitter<Invoice>();
   @Output() deleted = new EventEmitter<number>(); // id da invoice deletada
 
+
   products = signal<Product[]>([]);
 
   selectedProductId = 0;
@@ -42,6 +43,7 @@ export class InvoiceDetailModalComponent {
       productId: this.selectedProductId,
       quantity: this.quantity
     };
+
 
     this.invoice.items.push(newItem);
     this.selectedProductId = 0;
@@ -95,5 +97,9 @@ export class InvoiceDetailModalComponent {
 
   cancel() {
     this.close.emit();
+  }
+
+  getProduct(item: InvoiceItem) {
+    return this.products().find(p => p.id === item.productId);
   }
 }

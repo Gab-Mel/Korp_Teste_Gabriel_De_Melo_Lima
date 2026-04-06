@@ -5,6 +5,7 @@ using billing.Entities;
 using billing.Controllers.Requests;
 using billing.Services;
 using Humanizer;
+using BillingService.DTOs; 
 
 namespace billing.Controllers;
 
@@ -69,7 +70,7 @@ public class InvoiceController : ControllerBase
                 .Select(i => (i.ProductId, i.Quantity))
                 .ToList();
 
-            var invoice = await _service.CreateInvoice(request.CustumerName, items, idempotencyKey);
+            var invoice = await _service.CreateInvoice(request.CustomerName, items, idempotencyKey);
 
             return CreatedAtAction(nameof(GetById), new { id = invoice.Id }, invoice);
         }
@@ -124,9 +125,11 @@ public class InvoiceController : ControllerBase
 
         invoice.Status = "CLOSED";
 
+        Console.WriteLine($"/n/nItens na invoice: {invoice.Items.Count}");
+
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(invoice);
     }
 
     // PUT: api/invoice/1
@@ -147,12 +150,21 @@ public class InvoiceController : ControllerBase
         invoice.Items.Clear();
         foreach (var item in request.Items)
         {
+            var product = await _inventoryService.GetProduct(item.ProductId);
+            if (product == null)                
+                return BadRequest($"Produto com ID {item.ProductId} não encontrado no serviço de inventário.");
+            
             invoice.Items.Add(new InvoiceItem
             {
                 ProductId = item.ProductId,
-                Quantity = item.Quantity
+                Quantity = item.Quantity,
+                Description = product.Name,
+                UnitPrice = product.Price,
+                Total = product.Price * item.Quantity
             });
         }
+
+        invoice.Total = invoice.Items.Sum(i => i.Total);
 
         await _context.SaveChangesAsync();
 

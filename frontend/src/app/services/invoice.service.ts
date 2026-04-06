@@ -19,7 +19,7 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(this.baseUrl);
   }
 
-  create(invoice: {custumerName: string, items: InvoiceItem[]}) : Observable<Invoice> {
+  create(invoice: {customerName: string, items: InvoiceItem[]}) : Observable<Invoice> {
     const key = Date.now() + '-' + Math.random();
 
     return this.http.post<Invoice>(this.baseUrl, invoice, {

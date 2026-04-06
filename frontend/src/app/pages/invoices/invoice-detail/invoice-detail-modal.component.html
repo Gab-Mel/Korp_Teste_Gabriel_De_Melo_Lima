@@ -3,31 +3,41 @@
     <button class="close-btn" (click)="cancel()">×</button>
 
     <h2>Nota #{{ invoice?.number }}</h2>
-    <p>Status: {{ invoice?.status }}</p>
-    <p>Cliente: {{ invoice?.custumerName }}</p>
+    <tr>
+      Status: {{ invoice?.status }} |
+      Cliente: {{ invoice?.customerName }}
+    </tr>
+
 
     <ul>
       <li *ngFor="let item of invoice?.items; let i = index">
-        Produto {{ item.productId }} -
-        Qtd:
-        <input
-          *ngIf="invoice?.status === 'OPEN'"
-          type="number"
-          [value]="item.quantity"
-          (change)="updateItemQuantity(i, $any($event.target).valueAsNumber)"
-        />
-        <span *ngIf="invoice?.status !== 'OPEN'">{{ item.quantity }}</span>
+        <ng-container *ngIf="getProduct(item) as product">
+          Produto: {{ product.description }} -
+          Qtd:
+          <input
+            *ngIf="invoice?.status === 'OPEN'"
+            type="number"
+            [value]="item.quantity"
+            (change)="updateItemQuantity(i, $any($event.target).valueAsNumber)"
+          />
+          <span *ngIf="invoice?.status !== 'OPEN'">{{ item.quantity }}</span>
+          Preço: {{ product.price | currency:'BRL' }}{{ product.unit }} -
+          Total: {{ product.price * item.quantity | currency:'BRL' }}
+        </ng-container>
       </li>
     </ul>
 
     <div *ngIf="invoice.status === 'OPEN'">
+      <p>
       <select [(ngModel)]="selectedProductId">
         <option [value]="0">Selecione</option>
         <option *ngFor="let p of products()" [value]="p.id">{{ p.description }}</option>
       </select>
 
+
       <input type="number" [(ngModel)]="quantity" />
-      <button (click)="addItem()">Adicionar Item</button>
+      <button class="red" (click)="addItem()">Adicionar Item</button>
+      </p>
     </div>
 
     <hr />

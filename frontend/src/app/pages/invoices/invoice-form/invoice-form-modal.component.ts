@@ -15,6 +15,7 @@ import { Product } from '../../../models/product.model';
 export class InvoiceFormModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() created = new EventEmitter<any>();
+  @Output() printed = new EventEmitter<void>();
 
   products = signal<Product[]>([]);
   items = signal<InvoiceItem[]>([]);
@@ -24,7 +25,7 @@ export class InvoiceFormModalComponent {
 
   selectedProductId = 0;
   quantity = 1;
-  custumerName = '';
+  customerName = '';
 
 
   private productService = inject(ProductService);
@@ -49,25 +50,29 @@ export class InvoiceFormModalComponent {
   }
 
   save() {
-    this.invoiceService.create({custumerName: this.custumerName, items: this.items() }).subscribe(newInvoice => {
+    this.invoiceService.create({customerName: this.customerName, items: this.items() }).subscribe(newInvoice => {
       this.created.emit(newInvoice);
     });
   }
 
   saveAndPrint() {
-    this.invoiceService.create({custumerName: this.custumerName, items: this.items() }).subscribe(newInvoice => {
+    this.invoiceService.create({customerName: this.customerName, items: this.items() }).subscribe(newInvoice => {
       this.newInvoice.set(newInvoice);
       this.loadingClose.set(true);
 
-      this.invoiceService.close(newInvoice.id).subscribe({next: () => {
-        newInvoice.status = 'CLOSED';
-        this.created.emit(newInvoice);
-        this.loadingClose.set(false);
-        this.close.emit();
-        },
+      this.invoiceService.close(newInvoice.id).subscribe({
+        next: () => {
+          newInvoice.status = 'CLOSED';
+          this.created.emit(newInvoice);
+          this.loadingClose.set(false);
+          this.close.emit();
+          this.printed.emit();
+          },
         error: () => {
           this.loadingClose.set(false);
           this.close.emit();
+          this.printed.emit();
+          alert('Erro ao fechar nota para impressão. A nota foi criada, mas não foi possível fechá-la automaticamente. Por favor, feche a nota manualmente para imprimir.');
     }});
     });
   }

@@ -21,7 +21,7 @@ public class AppDbContext : DbContext
         entity.Property(i => i.Id)
               .ValueGeneratedOnAdd();
 
-        entity.Property(i => i.CustumerName)
+        entity.Property(i => i.CustomerName)
               .IsRequired();
 
         entity.Property(i => i.Status)

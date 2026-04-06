@@ -16,7 +16,7 @@ public class InvoiceService
     }
 
     public async Task<Invoice> CreateInvoice(
-        string custumerName,
+        string customerName,
         List<(int productId, int quantity)> items,
         string idempotencyKey)
     {
@@ -36,21 +36,30 @@ public class InvoiceService
 
             // if (!success)
             //     throw new Exception($"Erro ao baixar estoque do produto {item.productId}");
+            var product = await _inventoryService.GetProduct(item.productId);
+
+            if (product == null)
+                throw new Exception($"Produto {item.productId} não encontrado");
 
             invoiceItems.Add(new InvoiceItem
             {
                 ProductId = item.productId,
-                Quantity = item.quantity
+                UnitPrice = product.Price,
+                Description = product.Name,
+                Quantity = item.quantity,
+                Total = product.Price * item.quantity
             });
         }
 
-        // 🔥 3. cria invoice SEM confiar no Max (ainda vamos proteger)
+          
         var invoice = new Invoice
         {   
-            CustumerName = custumerName,
+            CustomerName = customerName,
             IdempotencyKey = idempotencyKey,
             Items = invoiceItems
         };
+
+        invoice.Total = invoiceItems.Sum(i => i.Total);
 
         _context.Invoices.Add(invoice);
 

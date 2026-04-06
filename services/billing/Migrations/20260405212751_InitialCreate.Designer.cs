@@ -12,7 +12,7 @@ using billing.Data;
 namespace billing.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260405131515_InitialCreate")]
+    [Migration("20260405212751_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace billing.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CustumerName")
+                    b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -50,6 +50,9 @@ namespace billing.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -70,6 +73,10 @@ namespace billing.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
@@ -78,6 +85,12 @@ namespace billing.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 

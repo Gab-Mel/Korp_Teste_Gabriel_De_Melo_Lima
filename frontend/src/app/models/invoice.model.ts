@@ -3,11 +3,21 @@ export interface InvoiceItem {
   quantity: number;
 }
 
+export interface InvoiceItemDetail {
+  productId: number;
+  quantity: number;
+  descripition: string;
+  price: number;
+  unit: string;
+  total: number;
+}
+
 export interface Invoice {
   id: number;
   number: number;
-  custumerName: string;
+  customerName: string;
   status: string;
+  total: number;
   createdAt: string;
-  items: InvoiceItem[];
+  items: any[];
 }

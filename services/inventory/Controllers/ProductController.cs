@@ -75,12 +75,13 @@ public class ProductController : ControllerBase
             return BadRequest("Unit is required");
 
 
-        // // atualização controlada
-        // product.Code = updated.Code;
-        // product.Description = updated.Description;
-        // product.Quantity = updated.Quantity;
-        // product.Price = updated.Price;
-        // product.Unit = updated.Unit;
+        // atualização controlada
+        product.Code = updated.Code;
+        product.Description = updated.Description;
+        product.Quantity = updated.Quantity;
+        product.Price = updated.Price;
+        product.Unit = updated.Unit;
+        
 
         await _context.SaveChangesAsync();
 

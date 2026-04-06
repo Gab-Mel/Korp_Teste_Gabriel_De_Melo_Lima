@@ -5,7 +5,7 @@
     <h2>Nova Nota</h2>
 
     <label>Cliente</label>
-    <input [(ngModel)]="custumerName" />
+    <input [(ngModel)]="customerName" />
 
     <!-- <label>Produto</label> -->
     <div *ngIf="products().length === 0">Carregando produtos...</div>
@@ -32,6 +32,6 @@
 
     <button (click)="save()">Salvar Nota</button>
     <button (click)="saveAndPrint()">Salvar e Imprimir</button>
-    <button (click)="cancel()">Cancelar</button>
+    <button class="red" (click)="cancel()">Cancelar</button>
   </div>
 </div>

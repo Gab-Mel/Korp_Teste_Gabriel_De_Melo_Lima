@@ -2,7 +2,7 @@ namespace billing.Controllers.Requests;
 
 public class CreateInvoiceRequest
 {
-    public string CustumerName { get; set; } = string.Empty;
+    public string CustomerName { get; set; } = string.Empty;
     public List<CreateInvoiceItemRequest> Items { get; set; } = new();
 }
 
