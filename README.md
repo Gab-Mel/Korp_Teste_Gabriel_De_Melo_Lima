@@ -9,9 +9,8 @@ Este repositório é responsável por entregar minha solução para o problema d
 * [Ferramentas usadas](#ferramentas-usadas)
     - [Frameworks](#frameworks)
     - [Bibliotecas](#Bibliotecas)
-* [Detalhamento Técnico]
-(#comentários-sobre-a-implementação-do-projeto)
-* [Build para rodar](#)
+* [Detalhamento Técnico](#comentários-sobre-a-implementação-do-projeto)
+* [Build para rodar](#build-para-rodar)
 
 # Escopo do problema
 
@@ -89,7 +88,7 @@ Para atender as requisições optei por docker que é fácil testar falhas siste
 
 Existencia de 3 entidades: Produtos, Notas e uma relacional que foi muito chamada de InvoiceItem por mim.
 
-Cada um dos dois serviços são indeoendentes se não pelo banco a quem eles dependem. no meu caso postegres. 
+Cada um dos dois serviços são independentes se não pelo banco a quem eles dependem. no meu caso postegres. 
 
 Apliquei controle de concorrencia validadando ativamente estoque e retrocedendo ações que deixariam o estoque negativo.
 
@@ -220,3 +219,23 @@ Router:
     _context.Products.Any(p => p.Id == id);
     ```
   - Possível uso em consultas para filtragem ou projeção de dados no banco com **Entity Framework**.
+
+# Build para rodar
+
+Na raiz do projeto rode: 
+
+```
+docker-compose up --build
+```
+Em outro terminal vá para a pasta `frontend`:
+
+```
+cd .\frontend
+```
+
+E execute:
+
+```
+npm install
+npm start
+```
