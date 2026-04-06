@@ -9,7 +9,9 @@ Este repositório é responsável por entregar minha solução para o problema d
 * [Ferramentas usadas](#ferramentas-usadas)
     - [Frameworks](#frameworks)
     - [Bibliotecas](#Bibliotecas)
-* [Detalhamento Técnico](#comentários-sobre-a-implementação-do-projeto)
+* [Detalhamento Técnico]
+(#comentários-sobre-a-implementação-do-projeto)
+* [Build para rodar](#)
 
 # Escopo do problema
 
@@ -130,7 +132,20 @@ e visualizar notas fechadas \\\\(•-•)//
 Os erros foram tratados retornando os devidos codigos e acontecidos para o terminal ou para notificações da tela :\)
 
 
+# Como buildar:
 
+1. Instale e/ou inicie o docker
+2. no repositório: `docker-compose up --build`
+3. no diretório cd ./frontend:
+    - `npm install`
+    - `npm start`
+```
+Router:
+    - inventory: http://localhost:5001,
+    - billing: http://localhost:5002,
+    - gatway: http://localhost:5000,
+    - frontend: http://localhost:4200.
+```
 
 
 
