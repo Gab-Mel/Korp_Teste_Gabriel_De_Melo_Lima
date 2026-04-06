@@ -44,4 +44,4 @@ services:
       - inventory
 
 volumes:
-  pgdata:
+  pgdata: 

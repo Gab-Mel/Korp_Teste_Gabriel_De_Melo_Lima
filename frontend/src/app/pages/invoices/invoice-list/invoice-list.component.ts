@@ -79,6 +79,10 @@ export class InvoiceListComponent implements OnInit {
     this.closeDetailModal();
   }
 
+  onInvoicePrinted() {
+    this.load();
+  }
+
   onInvoiceDeleted(deletedInvoiceId: number) {
     this.invoices.update(list => list.filter(inv => inv.id !== deletedInvoiceId));
     this.closeDetailModal();

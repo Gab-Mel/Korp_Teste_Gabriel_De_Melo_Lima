@@ -30,4 +30,21 @@ public class InventoryService
 
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<ProductResponse?> GetProduct(int productId)
+    {
+        var response = await _http.GetAsync($"/api/product/{productId}");
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadFromJsonAsync<ProductResponse>();
+    }
+
+    public class ProductResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public decimal Price { get; set; }
+    }
 }

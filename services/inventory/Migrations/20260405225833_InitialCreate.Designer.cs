@@ -11,7 +11,7 @@ using inventory.Data;
 namespace inventory.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260405124938_InitialCreate")]
+    [Migration("20260405225833_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

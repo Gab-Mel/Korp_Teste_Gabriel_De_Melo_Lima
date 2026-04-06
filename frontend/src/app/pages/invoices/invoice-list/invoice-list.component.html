@@ -9,6 +9,7 @@
     <tr>
       <th>Número</th>
       <th>Cliente</th>
+      <th>Total</th>
       <th>Status</th>
       <th>Ações</th>
     </tr>
@@ -16,7 +17,8 @@
   <tbody>
     <tr *ngFor="let i of invoices(); trackBy: trackById">
       <td>{{ i.number }}</td>
-      <td>{{ i.custumerName }}</td>
+      <td>{{ i.customerName }}</td>
+      <td>{{ i.total }}</td>
       <td>{{ i.status }}</td>
       <td>
         <button (click)="openDetailModal(i)">Ver</button>
@@ -28,7 +30,8 @@
 <app-invoice-form-modal
   *ngIf="showModal()"
   (close)="closeModal()"
-  (created)="onInvoiceCreated($event)">
+  (created)="onInvoiceCreated($event)"
+  (printed)="onInvoicePrinted()">
 </app-invoice-form-modal>
 
 <!-- botão de abrir detalhe -->
@@ -38,5 +41,6 @@
   *ngIf="showDetailModal()"
   [invoice]="selectedInvoice"
   (close)="closeDetailModal()"
-  (deleted)="onInvoiceDeleted($event)">
+  (deleted)="onInvoiceDeleted($event)"
+  (updated)="onInvoiceUpdated($event)">
 </app-invoice-detail-modal>
