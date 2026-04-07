@@ -17,13 +17,16 @@
           <input
             *ngIf="invoice?.status === 'OPEN'"
             type="number"
-            [value]="item.quantity"
-            (change)="updateItemQuantity(i, $any($event.target).valueAsNumber)"
+            [(ngModel)]="item.quantity"
+            (ngModelChange)="updateItemQuantity(i, $any($event.target).valueAsNumber)"
           />
           <span *ngIf="invoice?.status !== 'OPEN'">{{ item.quantity }}</span>
           Preço: {{ product.price | currency:'BRL' }}{{ product.unit }} -
           Total: {{ product.price * item.quantity | currency:'BRL' }}
         </ng-container>
+        <p *ngIf="!getProduct(item)">
+          Carregando produto...
+        </p>
       </li>
     </ul>
 
@@ -31,7 +34,7 @@
       <p>
       <select [(ngModel)]="selectedProductId">
         <option [value]="0">Selecione</option>
-        <option *ngFor="let p of products()" [value]="p.id">{{ p.description }}</option>
+        <option *ngFor="let p of products()" [ngValue]="p.id">{{ p.description }}</option>
       </select>
 
 

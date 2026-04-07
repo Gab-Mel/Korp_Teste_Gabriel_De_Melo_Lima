@@ -4,8 +4,8 @@ using billing.Data;
 using billing.Entities;
 using billing.Controllers.Requests;
 using billing.Services;
-using Humanizer;
-using BillingService.DTOs; 
+using billing.Documents;
+using QuestPDF.Fluent;
 
 namespace billing.Controllers;
 
@@ -15,8 +15,8 @@ public class InvoiceController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly InvoiceService _service;
-
     private readonly InventoryService _inventoryService;
+
 
     public InvoiceController(AppDbContext context, InvoiceService service, InventoryService inventoryService)
     {
@@ -184,5 +184,22 @@ public class InvoiceController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    // GET: api/invoice/1/pdf
+    [HttpGet("{id}/pdf")]
+    public async Task<IActionResult> GetPdf(int id)
+    {
+        var invoice = await _context.Invoices
+            .Include(i => i.Items)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (invoice == null)
+            return NotFound();
+
+        var document = new InvoiceDocument(invoice);
+        var pdfBytes = document.GeneratePdf();
+
+        return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
     }
 }

@@ -5,6 +5,14 @@ WORKDIR /src
 COPY billing.csproj ./
 RUN dotnet restore
 
+RUN apt-get update && apt-get install -y \
+    libfontconfig1 \
+    libfreetype6 \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # copia o resto
 COPY . ./
 

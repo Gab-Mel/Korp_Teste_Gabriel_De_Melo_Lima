@@ -79,6 +79,20 @@ export class InvoiceDetailModalComponent {
       },
       error: err => alert(err.message || 'Erro ao fechar invoice')
     });
+
+    this.invoiceService.downloadPdf(this.invoice.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `invoice_${this.invoice.id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      },
+      error: err => alert(err.message || 'Erro ao baixar PDF')
+    });
   }
 
   delete() {
@@ -100,6 +114,8 @@ export class InvoiceDetailModalComponent {
   }
 
   getProduct(item: InvoiceItem) {
+    if (!item) return null;
+     //f (!this.products() || this.products().length === 0) return null;
     return this.products().find(p => p.id === item.productId);
   }
 }

@@ -40,4 +40,8 @@ export class InvoiceService {
   delete(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
+  downloadPdf(id: number) {
+    return this.http.get(`${this.baseUrl}/${id}/pdf`, { responseType: 'blob' });
+  }
 }

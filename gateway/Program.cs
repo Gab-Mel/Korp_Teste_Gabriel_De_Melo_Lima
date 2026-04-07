@@ -60,12 +60,15 @@ app.Map("/{**path}", async (HttpContext context, IHttpClientFactory factory) =>
         return Results.Problem($"Erro ao conectar ao serviço de destino: {ex.Message}");
     }
 
-    var content = await response.Content.ReadAsStringAsync();
-    return Results.Content(
-        content,
-        response.Content.Headers.ContentType?.ToString() ?? "application/json",
-        Encoding.UTF8,
-        (int)response.StatusCode
+    var contentBytes = await response.Content.ReadAsByteArrayAsync();
+
+    return Results.File(
+        contentBytes,
+        response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream",
+        fileDownloadName: null,
+        lastModified: null,
+        entityTag: null,
+        enableRangeProcessing: false
     );
 });
 
